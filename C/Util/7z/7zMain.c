@@ -25,7 +25,7 @@
 
 static ISzAlloc g_Alloc = { SzAlloc, SzFree };
 
-//字面意思是确定大小
+//字面意思是确保缓存大小
 static int Buf_EnsureSize(CBuf *dest, size_t size)
 {
 	if (dest->size >= size)
@@ -351,8 +351,8 @@ int MY_CDECL main(int numargs, char *args[])
 	CLookToRead lookStream;				//不知道是啥
 	CSzArEx db;							//应该是储存压缩文件的结构体
 	SRes res;							//函数报错临时变量
-	ISzAlloc allocImp;					//可能是分配内存区
-	ISzAlloc allocTempImp;				//可能是临时内存区
+	ISzAlloc allocImp;					//主内存池分配函数
+	ISzAlloc allocTempImp;				//临时内存池分配函数
 	UInt16 *temp = NULL;				//主要用于临时储存压缩文件中文件名，应该是相对路径。
 	size_t tempSize = 0;				//可能是临时储存数组大小
 	// UInt32 parents[NUM_PARENTS_MAX];

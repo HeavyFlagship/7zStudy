@@ -98,34 +98,34 @@ typedef struct
 #define SzBitWithVals_Check(p, i) ((p)->Defs && ((p)->Defs[(i) >> 3] & (0x80 >> ((i) & 7))) != 0)
 
 //CSzAr 结构体，可能是储存包的各种属性以及位置之类
-//UInt32 NumPackStreams;
-//UInt32 NumFolders;
+//UInt32 NumPackStreams;			//包数目
+//UInt32 NumFolders;				//Folder数目
 //
-//UInt64 *PackPositions;          // NumPackStreams + 1
-//CSzBitUi32s FolderCRCs;         // NumFolders
+//UInt64 *PackPositions;			// NumPackStreams + 1	包位置
+//CSzBitUi32s FolderCRCs;			// NumFolders			Folder的CRC码
 //
-//size_t *FoCodersOffsets;        // NumFolders + 1
-//UInt32 *FoStartPackStreamIndex; // NumFolders + 1
-//UInt32 *FoToCoderUnpackSizes;   // NumFolders + 1
-//Byte *FoToMainUnpackSizeIndex;  // NumFolders
-//UInt64 *CoderUnpackSizes;       // for all coders in all folders
+//size_t *FoCodersOffsets;			// NumFolders + 1		
+//UInt32 *FoStartPackStreamIndex;	// NumFolders + 1
+//UInt32 *FoToCoderUnpackSizes;		// NumFolders + 1
+//Byte *FoToMainUnpackSizeIndex;	// NumFolders
+//UInt64 *CoderUnpackSizes;			// for all coders in all folders
 //
-//Byte *CodersData;
+//Byte *CodersData;					// Coders数据
 typedef struct
 {
-  UInt32 NumPackStreams;
-  UInt32 NumFolders;
+  UInt32 NumPackStreams;			// 包数目
+  UInt32 NumFolders;				// 7z文件中Folder的数目
 
-  UInt64 *PackPositions;          // NumPackStreams + 1
-  CSzBitUi32s FolderCRCs;         // NumFolders
+  UInt64 *PackPositions;			// NumPackStreams + 1	包位置
+  CSzBitUi32s FolderCRCs;			// NumFolders			Folder的CRC码
 
-  size_t *FoCodersOffsets;        // NumFolders + 1
-  UInt32 *FoStartPackStreamIndex; // NumFolders + 1
-  UInt32 *FoToCoderUnpackSizes;   // NumFolders + 1
-  Byte *FoToMainUnpackSizeIndex;  // NumFolders
-  UInt64 *CoderUnpackSizes;       // for all coders in all folders
+  size_t *FoCodersOffsets;			// NumFolders + 1		
+  UInt32 *FoStartPackStreamIndex;	// NumFolders + 1
+  UInt32 *FoToCoderUnpackSizes;		// NumFolders + 1
+  Byte *FoToMainUnpackSizeIndex;	// NumFolders
+  UInt64 *CoderUnpackSizes;			// for all coders in all folders
 
-  Byte *CodersData;
+  Byte *CodersData;					// Coders数据
 } CSzAr;
 //字面意思是获取Folder解压后的大小
 UInt64 SzAr_GetFolderUnpackSize(const CSzAr *p, UInt32 folderIndex);
@@ -139,32 +139,53 @@ SRes SzAr_DecodeFolder(const CSzAr *p,
 	size_t outSize,
     ISzAlloc *allocMain);
 
-//CSzArEx 结构体，有可能是用来储7z文件的结构体
+//CSzArEx 结构体，7z文档数据库
+//CSzAr db;						//可能是文件头
+//
+//UInt64 startPosAfterHeader;	//文件头后的压缩数据开始位置
+//UInt64 dataPos;				//data位置
+//
+//UInt32 NumFiles;				//文件数目
+//
+//UInt64 *UnpackPositions;		//NumFiles + 1 可能是每个文件的位置
+//
+//Byte *IsDirs;					//空目录标志
+//CSzBitUi32s CRCs;				//CRCs校验码
+//
+//CSzBitUi32s Attribs;			//属性
+//CSzBitUi64s MTime;
+//CSzBitUi64s CTime;
+//
+//UInt32 *FolderToFile;			// NumFolders + 1	可能是储存Folder对应File的序号
+//UInt32 *FileToFolder;			// NumFiles			可能是储存File对应Folder的序号
+//
+//size_t *FileNameOffsets;		//文件名补偿，/* in 2-byte steps */
+//Byte *FileNames;				//UTF-16-LE 文件名	
 typedef struct
 {
-  CSzAr db;
+  CSzAr db;						//可能是文件头
 
-  UInt64 startPosAfterHeader;
-  UInt64 dataPos;
+  UInt64 startPosAfterHeader;	//文件头后的压缩数据开始位置
+  UInt64 dataPos;				//data位置
   
-  UInt32 NumFiles;
+  UInt32 NumFiles;				//文件数目
 
-  UInt64 *UnpackPositions;  // NumFiles + 1
+  UInt64 *UnpackPositions;		// NumFiles + 1 可能是每个文件的位置
   // Byte *IsEmptyFiles;
 
-  Byte *IsDirs;
-  CSzBitUi32s CRCs;
+  Byte *IsDirs;					//空目录标志
+  CSzBitUi32s CRCs;				//CRCs校验码
 
-  CSzBitUi32s Attribs;
+  CSzBitUi32s Attribs;			//属性
   // CSzBitUi32s Parents;
   CSzBitUi64s MTime;
   CSzBitUi64s CTime;
 
-  UInt32 *FolderToFile;			// NumFolders + 1
-  UInt32 *FileToFolder;			// NumFiles
+  UInt32 *FolderToFile;			// NumFolders + 1	可能是储存Folder对应File的序号
+  UInt32 *FileToFolder;			// NumFiles			可能是储存File对应Folder的序号
 
-  size_t *FileNameOffsets;		/* in 2-byte steps */
-  Byte *FileNames;				/* UTF-16-LE */
+  size_t *FileNameOffsets;		//文件名补偿	/* in 2-byte steps */
+  Byte *FileNames;				//文件名		/* UTF-16-LE */
 } CSzArEx;
 
 //不清楚用途
