@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 
 #include "../../7z.h"
 #include "../../7zAlloc.h"
@@ -358,12 +357,7 @@ int MY_CDECL main(int numargs, char *args[])
 	size_t tempSize = 0;				//可能是临时储存数组大小
 	// UInt32 parents[NUM_PARENTS_MAX];
 
-	time_t time_start = 0, time_end = 0;
-	time_start= time(NULL);
-
 	printf("\n7z ANSI-C Decoder " MY_VERSION_COPYRIGHT_DATE "\n\n");
-	
-
 
 	if (numargs == 1)
 	{
@@ -459,7 +453,7 @@ int MY_CDECL main(int numargs, char *args[])
 				len = SzArEx_GetFileNameUtf16(&db, i, NULL);
 				// len = SzArEx_GetFullNameLen(&db, i);
 
-				//如果压缩文件名数组的空间空间不够则，这里重新分配
+				//这里重新分配压缩文件名数组的空间
 				if (len > tempSize)
 				{
 					SzFree(NULL, temp);
@@ -603,16 +597,12 @@ int MY_CDECL main(int numargs, char *args[])
 	SzFree(NULL, temp);
 
 	File_Close(&archiveStream.file);
-	//输出解压时间
-	time_end = time(NULL);
-	printf("\nExtract_time=%f", difftime(time_end, time_start));
 	//输出一切ok
 	if (res == SZ_OK)
 	{
 		printf("\nEverything is Ok\n");
 		return 0;
 	}
-
 
 	if (res == SZ_ERROR_UNSUPPORTED)
 		PrintError("decoder doesn't support this archive");

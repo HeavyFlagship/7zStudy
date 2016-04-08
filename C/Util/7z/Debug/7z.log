@@ -1,14 +1,44 @@
-﻿生成启动时间为 2016/4/7 14:42:43。
-     1>项目“D:\GitHub\7zStudy\C\Util\7z\7z.vcxproj”在节点 2 上(Build 个目标)。
+﻿生成启动时间为 2016/4/2 20:13:38。
+     1>项目“E:\Programing\7z1514-src\C\Util\7z\7z.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         D:\Programme\VisualStudio\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D _DEBUG /D _SZ_ALLOC_DEBUG2 /D _SZ_NO_INT_64_A /D WIN32 /D _CONSOLE /D UNICODE /D _VC80_UPGRADE=0x0600 /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"Precomp.h" /Fp".\Debug\7z.pch" /Fo".\Debug\\" /Fd".\Debug\vc140.pdb" /Gd /TC /analyze- /errorReport:prompt 7zMain.c
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D _DEBUG /D _SZ_ALLOC_DEBUG2 /D _SZ_NO_INT_64_A /D WIN32 /D _CONSOLE /D UNICODE /D _VC80_UPGRADE=0x0600 /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yc"Precomp.h" /Fp".\Debug\7z.pch" /Fo".\Debug\\" /Fd".\Debug\vc140.pdb" /Gd /TC /analyze- /errorReport:prompt Precomp.c
+         Precomp.c
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D _DEBUG /D _SZ_ALLOC_DEBUG2 /D _SZ_NO_INT_64_A /D WIN32 /D _CONSOLE /D UNICODE /D _VC80_UPGRADE=0x0600 /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"Precomp.h" /Fp".\Debug\7z.pch" /Fo".\Debug\\" /Fd".\Debug\vc140.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\7zAlloc.c ..\..\7zArcIn.c ..\..\7zBuf.c ..\..\7zCrc.c ..\..\7zCrcOpt.c ..\..\7zFile.c ..\..\7zStream.c ..\..\Bcj2.c ..\..\Bra.c ..\..\Bra86.c ..\..\BraIA64.c ..\..\CpuArch.c ..\..\Delta.c ..\..\Lzma2Dec.c ..\..\LzmaDec.c ..\..\Ppmd7.c ..\..\Ppmd7Dec.c 7zMain.c
          7zMain.c
-     1>d:\github\7zstudy\c\util\7z\7zmain.c(314): warning C4457: “s”的声明隐藏了函数参数
-         d:\github\7zstudy\c\util\7z\7zmain.c(289): note: 参见“s”的声明
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1189,5): warning MSB8012: TargetPath(D:\GitHub\7zStudy\C\Util\7z\.\Debug\7z.exe) does not match the Linker's OutputFile property value (c:\util\7zDec.exe). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+     1>e:\programing\7z1514-src\c\util\7z\7zmain.c(313): warning C4457: “s”的声明隐藏了函数参数
+         e:\programing\7z1514-src\c\util\7z\7zmain.c(288): note: 参见“s”的声明
+         Ppmd7Dec.c
+     1>e:\programing\7z1514-src\c\ppmd7dec.c(117): warning C4456: “i”的声明隐藏了上一个本地声明
+         e:\programing\7z1514-src\c\ppmd7dec.c(87): note: 参见“i”的声明
+         Ppmd7.c
+         LzmaDec.c
+         Lzma2Dec.c
+         Delta.c
+         CpuArch.c
+         BraIA64.c
+         Bra86.c
+         Bra.c
+         Bcj2.c
+         7zStream.c
+         7zFile.c
+         7zCrcOpt.c
+         7zCrc.c
+         7zBuf.c
+         7zArcIn.c
+     1>e:\programing\7z1514-src\c\7zarcin.c(1127): warning C4456: “type”的声明隐藏了上一个本地声明
+         e:\programing\7z1514-src\c\7zarcin.c(1107): note: 参见“type”的声明
+     1>e:\programing\7z1514-src\c\7zarcin.c(1173): warning C4456: “type”的声明隐藏了上一个本地声明
+         e:\programing\7z1514-src\c\7zarcin.c(1107): note: 参见“type”的声明
+     1>e:\programing\7z1514-src\c\7zarcin.c(1281): warning C4456: “type”的声明隐藏了上一个本地声明
+         e:\programing\7z1514-src\c\7zarcin.c(1107): note: 参见“type”的声明
+         7zAlloc.c
+         正在生成代码...
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D _7ZIP_PPMD_SUPPPORT /D _DEBUG /D _SZ_ALLOC_DEBUG2 /D _SZ_NO_INT_64_A /D WIN32 /D _CONSOLE /D UNICODE /D _VC80_UPGRADE=0x0600 /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"Precomp.h" /Fp".\Debug\7z.pch" /Fo".\Debug\\" /Fd".\Debug\vc140.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\7zDec.c
+         7zDec.c
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1189,5): warning MSB8012: TargetPath(E:\Programing\7z1514-src\C\Util\7z\.\Debug\7z.exe) does not match the Linker's OutputFile property value (c:\util\7zDec.exe). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1191,5): warning MSB8012: TargetName(7z) does not match the Linker's OutputFile property value (7zDec). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
        Link:
-         D:\Programme\VisualStudio\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"c:\util\7zDec.exe" /INCREMENTAL /NOLOGO odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:".\Debug\7z.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Debug\7z.lib" /MACHINE:X86 /SAFESEH .\Debug\7zAlloc.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"c:\util\7zDec.exe" /INCREMENTAL /NOLOGO odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:".\Debug\7z.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Debug\7z.lib" /MACHINE:X86 /SAFESEH .\Debug\7zAlloc.obj
          .\Debug\7zArcIn.obj
          .\Debug\7zBuf.obj
          .\Debug\7zCrc.obj
@@ -28,11 +58,10 @@
          .\Debug\Ppmd7Dec.obj
          .\Debug\7zMain.obj
          .\Debug\Precomp.obj
-         LINK : 没有找到 c:\util\7zDec.exe 或上一个增量链接没有生成它；正在执行完全链接
      1>7zAlloc.obj : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/SAFESEH”规范)
-         7z.vcxproj -> D:\GitHub\7zStudy\C\Util\7z\.\Debug\7z.exe
-     1>已完成生成项目“D:\GitHub\7zStudy\C\Util\7z\7z.vcxproj”(Build 个目标)的操作。
+         7z.vcxproj -> E:\Programing\7z1514-src\C\Util\7z\.\Debug\7z.exe
+     1>已完成生成项目“E:\Programing\7z1514-src\C\Util\7z\7z.vcxproj”(Build 个目标)的操作。
 
 已成功生成。
 
-已用时间 00:00:02.51
+已用时间 00:00:06.22
