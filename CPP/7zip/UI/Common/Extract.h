@@ -59,7 +59,7 @@ struct CExtractOptions: public CExtractOptionsBase
       YesToAll(false)
       {}
 };
-
+//可能是解压状态结构结构体
 struct CDecompressStat
 {
   UInt64 NumArchives;
