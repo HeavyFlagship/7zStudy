@@ -117,7 +117,7 @@ struct CUpdateOptions
       MultiThreadMixer(true)
     {}
 };
-
+//更新各种数据，输出文档对象和文档数据库=>&archive, &newDatabase
 HRESULT Update(
     DECL_EXTERNAL_CODECS_LOC_VARS
     IInStream *inStream,

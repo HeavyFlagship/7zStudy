@@ -635,7 +635,7 @@ STDMETHODIMP CHandler::GetProperty(UInt32 index, PROPID propID, PROPVARIANT *val
   return S_OK;
   // COM_TRY_END
 }
-
+//´ò¿ªÎÄµµ
 STDMETHODIMP CHandler::Open(IInStream *stream,
     const UInt64 *maxCheckStartPosition,
     IArchiveOpenCallback *openArchiveCallback)

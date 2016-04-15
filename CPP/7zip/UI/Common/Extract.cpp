@@ -252,11 +252,11 @@ HRESULT Extract(
 	st.Clear();
 	UInt64 totalPackSize = 0;
 	CRecordVector<UInt64> arcSizes;
-
+	//获取文档数
 	unsigned numArcs = options.StdInMode ? 1 : arcPaths.Size();
 
+	//检查文件列表，获取个个文档大小，以及全部文档大小
 	unsigned i;
-
 	for (i = 0; i < numArcs; i++)
 	{
 		NFind::CFileInfo fi;
@@ -272,11 +272,11 @@ HRESULT Extract(
 		arcSizes.Add(fi.Size);
 		totalPackSize += fi.Size;
 	}
-
+	//初始化文档跳过数组
 	CBoolArr skipArcs(numArcs);
 	for (i = 0; i < numArcs; i++)
 		skipArcs[i] = false;
-
+	//文档解压回调函数，可能用于给Decompress函数传递文档信息
 	CArchiveExtractCallback *ecs = new CArchiveExtractCallback;
 	CMyComPtr<IArchiveExtractCallback> ec(ecs);
 	bool multi = (numArcs > 1);
@@ -298,9 +298,11 @@ HRESULT Extract(
 	{
 		if (skipArcs[i])
 			continue;
-
+		//依次取路径
 		const UString &arcPath = arcPaths[i];
 		NFind::CFileInfo fi;
+		
+		//如果是StdInMode标准读取模式，文件大小为0
 		if (options.StdInMode)
 		{
 			fi.Size = 0;
@@ -384,7 +386,7 @@ HRESULT Extract(
 			}
 			continue;
 		}
-
+		//遍历arcLink中的路径，确定跳过文件
 		if (!options.StdInMode)
 		{
 			// numVolumes += arcLink.VolumePaths.Size();
@@ -431,7 +433,7 @@ HRESULT Extract(
 		}
 		#endif
 		*/
-
+		
 		CArc &arc = arcLink.Arcs.Back();
 		arc.MTimeDefined = (!options.StdInMode && !fi.IsDevice);
 		arc.MTime = fi.MTime;
@@ -443,7 +445,7 @@ HRESULT Extract(
 #else
 			false;
 #endif
-
+		//解压
 		RINOK(DecompressArchive(
 			codecs,
 			arcLink,

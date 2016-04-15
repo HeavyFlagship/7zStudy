@@ -32,7 +32,7 @@ namespace N7z {
 
 
 #ifndef EXTRACT_ONLY
-
+//字面意思是输出handler
 class COutHandler: public CMultiMethodProps
 {
   HRESULT SetSolidFromString(const UString &s);
@@ -40,9 +40,9 @@ class COutHandler: public CMultiMethodProps
 public:
   bool _removeSfxBlock;
   
-  UInt64 _numSolidFiles;
-  UInt64 _numSolidBytes;
-  bool _numSolidBytesDefined;
+  UInt64 _numSolidFiles;			//COutHandler类 solid文件数
+  UInt64 _numSolidBytes;			//COutHandler类 solid字节数
+  bool _numSolidBytesDefined;		//...
   bool _solidExtension;
   bool _useTypeSorting;
 
@@ -55,7 +55,7 @@ public:
   CBoolPair Write_ATime;
   CBoolPair Write_MTime;
 
-  bool _useMultiThreadMixer;
+  bool _useMultiThreadMixer;		//COutHandler类 使用多线程混合器
 
   // bool _volumeMode;
 
@@ -122,8 +122,8 @@ public:
   CHandler();
 
 private:
-  CMyComPtr<IInStream> _inStream;
-  NArchive::N7z::CDbEx _db;
+  CMyComPtr<IInStream> _inStream;		//CHandler类 读取流
+  NArchive::N7z::CDbEx _db;				//CHandler类 文档数据
   
   #ifndef _NO_CRYPTO
   bool _isEncrypted;

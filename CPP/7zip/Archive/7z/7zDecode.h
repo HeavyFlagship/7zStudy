@@ -42,7 +42,24 @@ class CDecoder
 public:
 
   CDecoder(bool useMixerMT);
-  
+//HRESULT Decode(
+//	  DECL_EXTERNAL_CODECS_LOC_VARS
+//	  IInStream *inStream,		//读取流
+//	  UInt64 startPos,			//开始位置
+//	  const CFolders &folders,	//folder
+//    unsigned folderIndex,		//folder的编号
+//	  const UInt64 *unpackSize	// 如果unpackSize不存在，则解压整个
+//								// 否则，只解压指定bytes的folder
+//	  , ISequentialOutStream *outStream			//输出流
+//	  , ICompressProgressInfo *compressProgress	//压缩过程
+//	  , ISequentialInStream **inStreamMainRes	//不清楚
+//
+//	  _7Z_DECODER_CRYPRO_VARS_DECL				//加密参数	
+//
+//#if !defined(_7ZIP_ST) && !defined(_SFX)
+//	  , bool mtMode, UInt32 numThreads			//多线程相关
+//#endif
+//	  );
   HRESULT Decode(
       DECL_EXTERNAL_CODECS_LOC_VARS
       IInStream *inStream,

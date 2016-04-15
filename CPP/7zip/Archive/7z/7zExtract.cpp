@@ -207,18 +207,18 @@ HRESULT CFolderOutStream::FlushCorrupted(Int32 callbackOperationResult)
   }
   return S_OK;
 }
-
+//应该是解压函数
 STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
     Int32 testModeSpec, IArchiveExtractCallback *extractCallbackSpec)
 {
   COM_TRY_BEGIN
   
   CMyComPtr<IArchiveExtractCallback> extractCallback = extractCallbackSpec;
-  
+  //应该是实际解压大小
   UInt64 importantTotalUnpacked = 0;
 
   // numItems = (UInt32)(Int32)-1;
-
+  //判断是否为解压全部文件
   bool allFilesMode = (numItems == (UInt32)(Int32)-1);
   if (allFilesMode)
     numItems = _db.Files.Size();
@@ -231,7 +231,7 @@ STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
     UInt32 nextFile = 0;
     
     UInt32 i;
-    
+    //获取所有实际解压文件总大小
     for (i = 0; i < numItems; i++)
     {
       UInt32 fileIndex = allFilesMode ? i : indices[i];
@@ -246,13 +246,13 @@ STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
       prevFolder = folderIndex;
     }
   }
-
+  
   RINOK(extractCallback->SetTotal(importantTotalUnpacked));
 
   CLocalProgress *lps = new CLocalProgress;
   CMyComPtr<ICompressProgressInfo> progress = lps;
   lps->Init(extractCallback, false);
-
+  //创建decoder
   CDecoder decoder(
     #if !defined(USE_MIXER_MT)
       false
@@ -276,34 +276,37 @@ STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
 
   CFolderOutStream *folderOutStream = new CFolderOutStream;
   CMyComPtr<ISequentialOutStream> outStream(folderOutStream);
-
+  //初始化folderOutStream
   folderOutStream->_db = &_db;
   folderOutStream->ExtractCallback = extractCallback;
   folderOutStream->TestMode = (testModeSpec != 0);
   folderOutStream->CheckCrc = (_crcSize != 0);
-
+  //可能是解压
   for (UInt32 i = 0;; lps->OutSize += curUnpacked, lps->InSize += curPacked)
   {
     RINOK(lps->SetCur());
 
     if (i >= numItems)
       break;
-
+	//可能是解压包的大小
     curUnpacked = 0;
+	//可能是当前包的大小
     curPacked = 0;
-
+	//文件序号
     UInt32 fileIndex = allFilesMode ? i : indices[i];
+	//文件对应的folder序号
     CNum folderIndex = _db.FileIndexToFolderIndexMap[fileIndex];
-
+	//固体文件数
     UInt32 numSolidFiles = 1;
 
     if (folderIndex != kNumNoIndex)
     {
       curPacked = _db.GetFolderFullPackSize(folderIndex);
-      UInt32 nextFile = fileIndex + 1;
-      fileIndex = _db.FolderStartFileIndex[folderIndex];
-      UInt32 k;
-
+      //下一个文件序号
+	  UInt32 nextFile = fileIndex + 1;
+      fileIndex = _db.FolderStartFileIndex[folderIndex];		//获取folder开始的文件序号
+      //用于判断下一个要解压的文件是否在一个folder内
+	  UInt32 k;
       for (k = i + 1; k < numItems; k++)
       {
         UInt32 fileIndex2 = allFilesMode ? k : indices[k];
@@ -345,7 +348,7 @@ STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
         UString password;
       #endif
 
-
+		//解压
       HRESULT result = decoder.Decode(
           EXTERNAL_CODECS_VARS
           _inStream,

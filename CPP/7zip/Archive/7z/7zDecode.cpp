@@ -239,10 +239,12 @@ HRESULT CDecoder::Decode(
     #endif
     )
 {
+	//包位置
   const UInt64 *packPositions = &folders.PackPositions[folders.FoStartPackStreamIndex[folderIndex]];
   CFolderEx folderInfo;
   folders.ParseFolderEx(folderIndex, folderInfo);
 
+  //判断是否可以解码
   if (!folderInfo.IsDecodingSupported())
     return E_NOTIMPL;
 
@@ -250,8 +252,9 @@ HRESULT CDecoder::Decode(
   Convert_FolderInfo_to_BindInfo(folderInfo, bindInfo);
   if (!bindInfo.CalcMapsAndCheck())
     return E_NOTIMPL;
-  
+  //folder解压大小
   UInt64 folderUnpackSize = folders.GetFolderUnpackSize(folderIndex);
+  //全解压标志
   bool fullUnpack = true;
   if (unpackSize)
   {
@@ -269,7 +272,7 @@ HRESULT CDecoder::Decode(
   passwordIsDefined = false;
   #endif
   */
-  
+  //各种mixer判定
   if (!_bindInfoPrev_Defined || !AreBindInfoExEqual(bindInfo, _bindInfoPrev))
   {
     _mixerRef.Release();
@@ -296,7 +299,7 @@ HRESULT CDecoder::Decode(
     }
     
     RINOK(_mixer->SetBindInfo(bindInfo));
-    
+    //遍历folder中的coders，并创建coder，添加到_mixer
     FOR_VECTOR(i, folderInfo.Coders)
     {
       const CCoderInfo &coderInfo = folderInfo.Coders[i];
@@ -306,7 +309,7 @@ HRESULT CDecoder::Decode(
       if ((coderInfo.MethodID >> 8) == 0x403)
         return E_NOTIMPL;
       #endif
-  
+	  //创建coder
       CCreatedCoder cod;
       RINOK(CreateCoder(
           EXTERNAL_CODECS_LOC_VARS
@@ -350,7 +353,7 @@ HRESULT CDecoder::Decode(
   UInt32 unpackStreamIndexStart = folders.FoToCoderUnpackSizes[folderIndex];
 
   unsigned i;
-
+  //遍历folder中的coders
   for (i = 0; i < folderInfo.Coders.Size(); i++)
   {
     const CCoderInfo &coderInfo = folderInfo.Coders[i];
@@ -359,7 +362,8 @@ HRESULT CDecoder::Decode(
     {
       CMyComPtr<ICompressSetDecoderProperties2> setDecoderProperties;
       decoder->QueryInterface(IID_ICompressSetDecoderProperties2, (void **)&setDecoderProperties);
-      if (setDecoderProperties)
+      //可能是分配储存空间
+	  if (setDecoderProperties)
       {
         const CByteBuffer &props = coderInfo.Props;
         size_t size = props.Size();
@@ -371,7 +375,7 @@ HRESULT CDecoder::Decode(
         RINOK(res);
       }
     }
-
+	//多线程设置
     #if !defined(_7ZIP_ST) && !defined(_SFX)
     if (mtMode)
     {
@@ -383,7 +387,7 @@ HRESULT CDecoder::Decode(
       }
     }
     #endif
-
+	//加密设置
     #ifndef _NO_CRYPTO
     {
       CMyComPtr<ICryptoSetPassword> cryptoSetPassword;
@@ -414,7 +418,7 @@ HRESULT CDecoder::Decode(
       }
     }
     #endif
-
+	//设置完成模式
     {
       CMyComPtr<ICompressSetFinishMode> setFinishMode;
       decoder->QueryInterface(IID_ICompressSetFinishMode, (void **)&setFinishMode);
@@ -423,7 +427,7 @@ HRESULT CDecoder::Decode(
         RINOK(setFinishMode->SetFinishMode(BoolToInt(fullUnpack)));
       }
     }
-    
+    //stream设置
     UInt32 numStreams = (UInt32)coderInfo.NumStreams;
     
     CObjArray<UInt64> packSizes(numStreams);
@@ -444,7 +448,7 @@ HRESULT CDecoder::Decode(
         packSizesPointers[j] = &packSizes[j];
       }
     }
-
+	//解压后大小
     const UInt64 *unpackSizesPointer =
         (unpackSize && i == bindInfo.UnpackCoder) ?
             unpackSize :
@@ -452,7 +456,7 @@ HRESULT CDecoder::Decode(
     
     _mixer->SetCoderInfo(i, unpackSizesPointer, packSizesPointers);
   }
-
+  //选择主coder，可能是最终输出coder
   if (outStream)
   {
     _mixer->SelectMainCoder(!fullUnpack);
@@ -477,7 +481,7 @@ HRESULT CDecoder::Decode(
     #endif
       needMtLock = true;
   }
-
+  //添加输入流 处理线程等
   for (unsigned j = 0; j < folderInfo.PackStreams.Size(); j++)
   {
     CMyComPtr<ISequentialInStream> packStream;
@@ -517,15 +521,16 @@ HRESULT CDecoder::Decode(
     streamSpec->SetStream(packStream);
     streamSpec->Init(packPositions[j + 1] - packPositions[j]);
   }
-  
+  //读取流指针数组分配
   unsigned num = inStreams.Size();
   CObjArray<ISequentialInStream *> inStreamPointers(num);
   for (i = 0; i < num; i++)
     inStreamPointers[i] = inStreams[i];
-
+  //解压输出
   if (outStream)
   {
     CMyComPtr<ICompressProgressInfo> progress2;
+	//若coder的packsize大小不正确，则重新分配compressProgress
     if (compressProgress && !_mixer->Is_PackSize_Correct_for_Coder(_mixer->MainCoderIndex))
       progress2 = new CDecProgress(compressProgress);
 

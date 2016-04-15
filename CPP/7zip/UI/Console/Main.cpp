@@ -469,7 +469,7 @@ static void PrintHexId(CStdOutStream &so, UInt64 id)
   ConvertUInt64ToHex(id, s);
   PrintStringRight(so, s, 8);
 }
-
+//√¸¡Ó¥¶¿Ì
 int Main2(
   #ifndef _WIN32
   int numArgs, char *args[]

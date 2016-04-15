@@ -47,7 +47,7 @@ HRESULT CHandler::PropsMethod_To_FullMethod(CMethodFull &dest, const COneMethodI
   (CProps &)dest = (CProps &)m;
   return S_OK;
 }
-
+//设置头方法，可能是用于解压头文件的方法
 HRESULT CHandler::SetHeaderMethod(CCompressionMethodMode &headerMethod)
 {
   if (!_compressHeaders)
@@ -63,7 +63,7 @@ HRESULT CHandler::SetHeaderMethod(CCompressionMethodMode &headerMethod)
   CMethodFull &methodFull = headerMethod.Methods.AddNew();
   return PropsMethod_To_FullMethod(methodFull, m);
 }
-
+//设置主方法，可能是用于解压的方法
 HRESULT CHandler::SetMainMethod(
     CCompressionMethodMode &methodMode
     #ifndef _7ZIP_ST
@@ -153,7 +153,7 @@ HRESULT CHandler::SetMainMethod(
   _numSolidBytesDefined = true;
   return S_OK;
 }
-
+//可能是获取文件时间
 static HRESULT GetTime(IArchiveUpdateCallback *updateCallback, int index, PROPID propID, UInt64 &ft, bool &ftDefined)
 {
   // ft = 0;
@@ -242,6 +242,7 @@ static int AddFolder(CObjectVector<CTreeFolder> &treeFolders, int cur, const USt
 }
 */
 
+//更新items，可能是更新文档中的文件，也就是重写CHandler的文档
 STDMETHODIMP CHandler::UpdateItems(ISequentialOutStream *outStream, UInt32 numItems,
     IArchiveUpdateCallback *updateCallback)
 {
@@ -689,7 +690,7 @@ static HRESULT ParseBond(UString &srcString, UInt32 &coder, UInt32 &stream)
   }
   return S_OK;
 }
-
+//初始化属性
 void COutHandler::InitProps()
 {
   CMultiMethodProps::Init();
@@ -783,7 +784,7 @@ static HRESULT PROPVARIANT_to_BoolPair(const PROPVARIANT &prop, CBoolPair &dest)
   dest.Def = true;
   return S_OK;
 }
-
+//设置属性
 HRESULT COutHandler::SetProperty(const wchar_t *nameSpec, const PROPVARIANT &value)
 {
   UString name = nameSpec;
@@ -836,7 +837,7 @@ HRESULT COutHandler::SetProperty(const wchar_t *nameSpec, const PROPVARIANT &val
   }
   return CMultiMethodProps::SetProperty(name, value);
 }
-
+//设置属性集
 STDMETHODIMP CHandler::SetProperties(const wchar_t * const *names, const PROPVARIANT *values, UInt32 numProps)
 {
   COM_TRY_BEGIN
