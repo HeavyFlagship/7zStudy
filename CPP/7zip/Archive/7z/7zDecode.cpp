@@ -521,7 +521,7 @@ HRESULT CDecoder::Decode(
     streamSpec->SetStream(packStream);
     streamSpec->Init(packPositions[j + 1] - packPositions[j]);
   }
-  //读取流指针数组分配
+  //读取流的指针的数组分配
   unsigned num = inStreams.Size();
   CObjArray<ISequentialInStream *> inStreamPointers(num);
   for (i = 0; i < num; i++)

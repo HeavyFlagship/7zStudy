@@ -268,7 +268,7 @@ STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
       _useMultiThreadMixer
     #endif
     );
-
+  //可能是压缩包，解压包的游标
   UInt64 curPacked, curUnpacked;
 
   CMyComPtr<IArchiveExtractCallbackMessage> callbackMessage;
@@ -296,7 +296,7 @@ STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
     UInt32 fileIndex = allFilesMode ? i : indices[i];
 	//文件对应的folder序号
     CNum folderIndex = _db.FileIndexToFolderIndexMap[fileIndex];
-	//固体文件数
+	//这一轮循环解压的文件数
     UInt32 numSolidFiles = 1;
 
     if (folderIndex != kNumNoIndex)
@@ -305,19 +305,23 @@ STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
       //下一个文件序号
 	  UInt32 nextFile = fileIndex + 1;
       fileIndex = _db.FolderStartFileIndex[folderIndex];		//获取folder开始的文件序号
-      //用于判断下一个要解压的文件是否在一个folder内
+      //用于找出下一个非当前folder的文件
 	  UInt32 k;
       for (k = i + 1; k < numItems; k++)
       {
+		//k所对应的文件序号
         UInt32 fileIndex2 = allFilesMode ? k : indices[k];
+		//fileIndex2对应的folder和当前folder号比较，确定是否为同一个folder，若不是则跳出循环
+		//或，fileIndex2小于nextFile，即可能顺序出错，跳出循环
         if (_db.FileIndexToFolderIndexMap[fileIndex2] != folderIndex
             || fileIndex2 < nextFile)
           break;
+		//这里是当前folder对应的最后一个需要解压的文件序号+1，即界限
         nextFile = fileIndex2 + 1;
       }
       
       numSolidFiles = k - i;
-      
+      //这里把从fileIndex到nextFile的文件大小累加
       for (k = fileIndex; k < nextFile; k++)
         curUnpacked += _db.Files[k].Size;
     }
