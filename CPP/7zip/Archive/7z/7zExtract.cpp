@@ -16,398 +16,400 @@
 namespace NArchive {
 namespace N7z {
 
-class CFolderOutStream:
-  public ISequentialOutStream,
-  public CMyUnknownImp
+class CFolderOutStream :
+	public ISequentialOutStream,
+	public CMyUnknownImp
 {
-  CMyComPtr<ISequentialOutStream> _stream;
+	CMyComPtr<ISequentialOutStream> _stream;
 public:
-  bool TestMode;
-  bool CheckCrc;
+	bool TestMode;
+	bool CheckCrc;
 private:
-  bool _fileIsOpen;
-  bool _calcCrc;
-  UInt32 _crc;
-  UInt64 _rem;
+	bool _fileIsOpen;
+	bool _calcCrc;
+	UInt32 _crc;
+	UInt64 _rem;
 
-  const UInt32 *_indexes;
-  unsigned _numFiles;
-  unsigned _fileIndex;
+	const UInt32 *_indexes;
+	unsigned _numFiles;
+	unsigned _fileIndex;
 
-  HRESULT OpenFile(bool isCorrupted = false);
-  HRESULT CloseFile_and_SetResult(Int32 res);
-  HRESULT CloseFile();
-  HRESULT ProcessEmptyFiles();
+	HRESULT OpenFile(bool isCorrupted = false);
+	HRESULT CloseFile_and_SetResult(Int32 res);
+	HRESULT CloseFile();
+	HRESULT ProcessEmptyFiles();
 
 public:
-  MY_UNKNOWN_IMP1(ISequentialOutStream)
+	MY_UNKNOWN_IMP1(ISequentialOutStream)
 
-  const CDbEx *_db;
-  CMyComPtr<IArchiveExtractCallback> ExtractCallback;
+		const CDbEx *_db;
+	CMyComPtr<IArchiveExtractCallback> ExtractCallback;
 
-  bool ExtraWriteWasCut;
+	bool ExtraWriteWasCut;
 
-  CFolderOutStream():
-      TestMode(false),
-      CheckCrc(true)
-      {}
+	CFolderOutStream() :
+		TestMode(false),
+		CheckCrc(true)
+	{}
 
-  STDMETHOD(Write)(const void *data, UInt32 size, UInt32 *processedSize);
+	STDMETHOD(Write)(const void *data, UInt32 size, UInt32 *processedSize);
 
-  HRESULT Init(unsigned startIndex, const UInt32 *indexes, unsigned numFiles);
-  HRESULT FlushCorrupted(Int32 callbackOperationResult);
+	HRESULT Init(unsigned startIndex, const UInt32 *indexes, unsigned numFiles);
+	HRESULT FlushCorrupted(Int32 callbackOperationResult);
 
-  bool WasWritingFinished() const { return _numFiles == 0; }
+	bool WasWritingFinished() const { return _numFiles == 0; }
 };
 
 
 HRESULT CFolderOutStream::Init(unsigned startIndex, const UInt32 *indexes, unsigned numFiles)
 {
-  _fileIndex = startIndex;
-  _indexes = indexes;
-  _numFiles = numFiles;
-  
-  _fileIsOpen = false;
-  ExtraWriteWasCut = false;
-  
-  return ProcessEmptyFiles();
+	_fileIndex = startIndex;
+	_indexes = indexes;
+	_numFiles = numFiles;
+
+	_fileIsOpen = false;
+	ExtraWriteWasCut = false;
+
+	return ProcessEmptyFiles();
 }
 
 HRESULT CFolderOutStream::OpenFile(bool isCorrupted)
 {
-  const CFileItem &fi = _db->Files[_fileIndex];
-  UInt32 nextFileIndex = (_indexes ? *_indexes : _fileIndex);
-  Int32 askMode = (_fileIndex == nextFileIndex) ?
-        (TestMode ?
-        NExtract::NAskMode::kTest :
-        NExtract::NAskMode::kExtract) :
-      NExtract::NAskMode::kSkip;
+	const CFileItem &fi = _db->Files[_fileIndex];
+	UInt32 nextFileIndex = (_indexes ? *_indexes : _fileIndex);
+	Int32 askMode = (_fileIndex == nextFileIndex) ?
+		(TestMode ?
+			NExtract::NAskMode::kTest :
+			NExtract::NAskMode::kExtract) :
+		NExtract::NAskMode::kSkip;
 
-  if (isCorrupted
-      && askMode == NExtract::NAskMode::kExtract
-      && !_db->IsItemAnti(_fileIndex)
-      && !fi.IsDir)
-    askMode = NExtract::NAskMode::kTest;
-  
-  CMyComPtr<ISequentialOutStream> realOutStream;
-  RINOK(ExtractCallback->GetStream(_fileIndex, &realOutStream, askMode));
-  
-  _stream = realOutStream;
-  _crc = CRC_INIT_VAL;
-  _calcCrc = (CheckCrc && fi.CrcDefined && !fi.IsDir);
+	if (isCorrupted
+		&& askMode == NExtract::NAskMode::kExtract
+		&& !_db->IsItemAnti(_fileIndex)
+		&& !fi.IsDir)
+		askMode = NExtract::NAskMode::kTest;
 
-  _fileIsOpen = true;
-  _rem = fi.Size;
-  
-  if (askMode == NExtract::NAskMode::kExtract
-      && !realOutStream
-      && !_db->IsItemAnti(_fileIndex)
-      && !fi.IsDir)
-    askMode = NExtract::NAskMode::kSkip;
-  return ExtractCallback->PrepareOperation(askMode);
+	CMyComPtr<ISequentialOutStream> realOutStream;
+	RINOK(ExtractCallback->GetStream(_fileIndex, &realOutStream, askMode));
+
+	_stream = realOutStream;
+	_crc = CRC_INIT_VAL;
+	_calcCrc = (CheckCrc && fi.CrcDefined && !fi.IsDir);
+
+	_fileIsOpen = true;
+	_rem = fi.Size;
+
+	if (askMode == NExtract::NAskMode::kExtract
+		&& !realOutStream
+		&& !_db->IsItemAnti(_fileIndex)
+		&& !fi.IsDir)
+		askMode = NExtract::NAskMode::kSkip;
+	return ExtractCallback->PrepareOperation(askMode);
 }
 
 HRESULT CFolderOutStream::CloseFile_and_SetResult(Int32 res)
 {
-  _stream.Release();
-  _fileIsOpen = false;
-  
-  if (!_indexes)
-    _numFiles--;
-  else if (*_indexes == _fileIndex)
-  {
-    _indexes++;
-    _numFiles--;
-  }
+	_stream.Release();
+	_fileIsOpen = false;
 
-  _fileIndex++;
-  return ExtractCallback->SetOperationResult(res);
+	if (!_indexes)
+		_numFiles--;
+	else if (*_indexes == _fileIndex)
+	{
+		_indexes++;
+		_numFiles--;
+	}
+
+	_fileIndex++;
+	return ExtractCallback->SetOperationResult(res);
 }
 
 HRESULT CFolderOutStream::CloseFile()
 {
-  const CFileItem &fi = _db->Files[_fileIndex];
-  return CloseFile_and_SetResult((!_calcCrc || fi.Crc == CRC_GET_DIGEST(_crc)) ?
-      NExtract::NOperationResult::kOK :
-      NExtract::NOperationResult::kCRCError);
+	const CFileItem &fi = _db->Files[_fileIndex];
+	return CloseFile_and_SetResult((!_calcCrc || fi.Crc == CRC_GET_DIGEST(_crc)) ?
+		NExtract::NOperationResult::kOK :
+		NExtract::NOperationResult::kCRCError);
 }
 
 HRESULT CFolderOutStream::ProcessEmptyFiles()
 {
-  while (_numFiles != 0 && _db->Files[_fileIndex].Size == 0)
-  {
-    RINOK(OpenFile());
-    RINOK(CloseFile());
-  }
-  return S_OK;
+	while (_numFiles != 0 && _db->Files[_fileIndex].Size == 0)
+	{
+		RINOK(OpenFile());
+		RINOK(CloseFile());
+	}
+	return S_OK;
 }
 
 STDMETHODIMP CFolderOutStream::Write(const void *data, UInt32 size, UInt32 *processedSize)
 {
-  if (processedSize)
-    *processedSize = 0;
-  
-  while (size != 0)
-  {
-    if (_fileIsOpen)
-    {
-      UInt32 cur = (size < _rem ? size : (UInt32)_rem);
-      HRESULT result = S_OK;
-      if (_stream)
-        result = _stream->Write(data, cur, &cur);
-      if (_calcCrc)
-        _crc = CrcUpdate(_crc, data, cur);
-      if (processedSize)
-        *processedSize += cur;
-      data = (const Byte *)data + cur;
-      size -= cur;
-      _rem -= cur;
-      if (_rem == 0)
-      {
-        RINOK(CloseFile());
-        RINOK(ProcessEmptyFiles());
-      }
-      RINOK(result);
-      if (cur == 0)
-        break;
-      continue;
-    }
-  
-    RINOK(ProcessEmptyFiles());
-    if (_numFiles == 0)
-    {
-      // we support partial extracting
-      /*
-      if (processedSize)
-        *processedSize += size;
-      break;
-      */
-      ExtraWriteWasCut = true;
-      // return S_FALSE;
-      return k_My_HRESULT_WritingWasCut;
-    }
-    RINOK(OpenFile());
-  }
-  
-  return S_OK;
+	if (processedSize)
+		*processedSize = 0;
+
+	while (size != 0)
+	{
+		if (_fileIsOpen)
+		{
+			UInt32 cur = (size < _rem ? size : (UInt32)_rem);
+			HRESULT result = S_OK;
+			if (_stream)
+				result = _stream->Write(data, cur, &cur);
+			if (_calcCrc)
+				_crc = CrcUpdate(_crc, data, cur);
+			if (processedSize)
+				*processedSize += cur;
+			data = (const Byte *)data + cur;
+			size -= cur;
+			_rem -= cur;
+			if (_rem == 0)
+			{
+				RINOK(CloseFile());
+				RINOK(ProcessEmptyFiles());
+			}
+			RINOK(result);
+			if (cur == 0)
+				break;
+			continue;
+		}
+
+		RINOK(ProcessEmptyFiles());
+		if (_numFiles == 0)
+		{
+			// we support partial extracting
+			/*
+			if (processedSize)
+				*processedSize += size;
+			break;
+			*/
+			ExtraWriteWasCut = true;
+			// return S_FALSE;
+			return k_My_HRESULT_WritingWasCut;
+		}
+		RINOK(OpenFile());
+	}
+
+	return S_OK;
 }
 
 HRESULT CFolderOutStream::FlushCorrupted(Int32 callbackOperationResult)
 {
-  while (_numFiles != 0)
-  {
-    if (_fileIsOpen)
-    {
-      RINOK(CloseFile_and_SetResult(callbackOperationResult));
-    }
-    else
-    {
-      RINOK(OpenFile(true));
-    }
-  }
-  return S_OK;
+	while (_numFiles != 0)
+	{
+		if (_fileIsOpen)
+		{
+			RINOK(CloseFile_and_SetResult(callbackOperationResult));
+		}
+		else
+		{
+			RINOK(OpenFile(true));
+		}
+	}
+	return S_OK;
 }
 //应该是解压函数
 STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
-    Int32 testModeSpec, IArchiveExtractCallback *extractCallbackSpec)
+	Int32 testModeSpec, IArchiveExtractCallback *extractCallbackSpec)
 {
-  COM_TRY_BEGIN
-  
-  CMyComPtr<IArchiveExtractCallback> extractCallback = extractCallbackSpec;
-  //应该是实际解压大小
-  UInt64 importantTotalUnpacked = 0;
+	COM_TRY_BEGIN
 
-  // numItems = (UInt32)(Int32)-1;
-  //判断是否为解压全部文件
-  bool allFilesMode = (numItems == (UInt32)(Int32)-1);
-  if (allFilesMode)
-    numItems = _db.Files.Size();
+		CMyComPtr<IArchiveExtractCallback> extractCallback = extractCallbackSpec;
+	//应该是实际解压大小
+	UInt64 importantTotalUnpacked = 0;
 
-  if (numItems == 0)
-    return S_OK;
+	// numItems = (UInt32)(Int32)-1;
+	//判断是否为解压全部文件
+	bool allFilesMode = (numItems == (UInt32)(Int32)-1);
+	if (allFilesMode)
+		numItems = _db.Files.Size();
 
-  {
-    CNum prevFolder = kNumNoIndex;
-    UInt32 nextFile = 0;
-    
-    UInt32 i;
-    //获取所有实际解压文件总大小
-    for (i = 0; i < numItems; i++)
-    {
-      UInt32 fileIndex = allFilesMode ? i : indices[i];
-      CNum folderIndex = _db.FileIndexToFolderIndexMap[fileIndex];
-      if (folderIndex == kNumNoIndex)
-        continue;
-      if (folderIndex != prevFolder || fileIndex < nextFile)
-        nextFile = _db.FolderStartFileIndex[folderIndex];
-      for (CNum index = nextFile; index <= fileIndex; index++)
-        importantTotalUnpacked += _db.Files[index].Size;
-      nextFile = fileIndex + 1;
-      prevFolder = folderIndex;
-    }
-  }
-  
-  RINOK(extractCallback->SetTotal(importantTotalUnpacked));
+	if (numItems == 0)
+		return S_OK;
 
-  CLocalProgress *lps = new CLocalProgress;
-  CMyComPtr<ICompressProgressInfo> progress = lps;
-  lps->Init(extractCallback, false);
-  //创建decoder
-  CDecoder decoder(
-    #if !defined(USE_MIXER_MT)
-      false
-    #elif !defined(USE_MIXER_ST)
-      true
-    #elif !defined(__7Z_SET_PROPERTIES)
-      #ifdef _7ZIP_ST
-        false
-      #else
-        true
-      #endif
-    #else
-      _useMultiThreadMixer
-    #endif
-    );
-  //可能是压缩包，解压包的游标
-  UInt64 curPacked, curUnpacked;
+	{
+		CNum prevFolder = kNumNoIndex;
+		UInt32 nextFile = 0;
 
-  CMyComPtr<IArchiveExtractCallbackMessage> callbackMessage;
-  extractCallback.QueryInterface(IID_IArchiveExtractCallbackMessage, &callbackMessage);
+		UInt32 i;
+		//获取所有实际解压文件总大小
+		for (i = 0; i < numItems; i++)
+		{
+			UInt32 fileIndex = allFilesMode ? i : indices[i];
+			CNum folderIndex = _db.FileIndexToFolderIndexMap[fileIndex];
+			if (folderIndex == kNumNoIndex)
+				continue;
+			if (folderIndex != prevFolder || fileIndex < nextFile)
+				nextFile = _db.FolderStartFileIndex[folderIndex];
+			for (CNum index = nextFile; index <= fileIndex; index++)
+				importantTotalUnpacked += _db.Files[index].Size;
+			nextFile = fileIndex + 1;
+			prevFolder = folderIndex;
+		}
+	}
 
-  CFolderOutStream *folderOutStream = new CFolderOutStream;
-  CMyComPtr<ISequentialOutStream> outStream(folderOutStream);
-  //初始化folderOutStream
-  folderOutStream->_db = &_db;
-  folderOutStream->ExtractCallback = extractCallback;
-  folderOutStream->TestMode = (testModeSpec != 0);
-  folderOutStream->CheckCrc = (_crcSize != 0);
-  //可能是解压
-  for (UInt32 i = 0;; lps->OutSize += curUnpacked, lps->InSize += curPacked)
-  {
-    RINOK(lps->SetCur());
+	RINOK(extractCallback->SetTotal(importantTotalUnpacked));
 
-    if (i >= numItems)
-      break;
-	//可能是解压包的大小
-    curUnpacked = 0;
-	//可能是当前包的大小
-    curPacked = 0;
-	//文件序号
-    UInt32 fileIndex = allFilesMode ? i : indices[i];
-	//文件对应的folder序号
-    CNum folderIndex = _db.FileIndexToFolderIndexMap[fileIndex];
-	//这一轮循环解压的文件数
-    UInt32 numSolidFiles = 1;
+	CLocalProgress *lps = new CLocalProgress;
+	CMyComPtr<ICompressProgressInfo> progress = lps;
+	lps->Init(extractCallback, false);
+	//创建decoder
+	CDecoder decoder(
+#if !defined(USE_MIXER_MT)
+		false
+#elif !defined(USE_MIXER_ST)
+		true
+#elif !defined(__7Z_SET_PROPERTIES)
+#ifdef _7ZIP_ST
+		false
+#else
+		true
+#endif
+#else
+		_useMultiThreadMixer
+#endif
+		);
+	//可能是压缩包，解压包的游标
+	UInt64 curPacked, curUnpacked;
 
-    if (folderIndex != kNumNoIndex)
-    {
-      curPacked = _db.GetFolderFullPackSize(folderIndex);
-      //下一个文件序号
-	  UInt32 nextFile = fileIndex + 1;
-      fileIndex = _db.FolderStartFileIndex[folderIndex];		//获取folder开始的文件序号
-      //用于找出下一个非当前folder的文件
-	  UInt32 k;
-      for (k = i + 1; k < numItems; k++)
-      {
-		//k所对应的文件序号
-        UInt32 fileIndex2 = allFilesMode ? k : indices[k];
-		//fileIndex2对应的folder和当前folder号比较，确定是否为同一个folder，若不是则跳出循环
-		//或，fileIndex2小于nextFile，即可能顺序出错，跳出循环
-        if (_db.FileIndexToFolderIndexMap[fileIndex2] != folderIndex
-            || fileIndex2 < nextFile)
-          break;
-		//这里是当前folder对应的最后一个需要解压的文件序号+1，即界限
-        nextFile = fileIndex2 + 1;
-      }
-      
-      numSolidFiles = k - i;
-      //这里把从fileIndex到nextFile的文件大小累加
-      for (k = fileIndex; k < nextFile; k++)
-        curUnpacked += _db.Files[k].Size;
-    }
+	CMyComPtr<IArchiveExtractCallbackMessage> callbackMessage;
+	extractCallback.QueryInterface(IID_IArchiveExtractCallbackMessage, &callbackMessage);
 
-    HRESULT result = folderOutStream->Init(fileIndex,
-        allFilesMode ? NULL : indices + i,
-        numSolidFiles);
+	CFolderOutStream *folderOutStream = new CFolderOutStream;
+	CMyComPtr<ISequentialOutStream> outStream(folderOutStream);
+	//初始化folderOutStream
+	folderOutStream->_db = &_db;
+	folderOutStream->ExtractCallback = extractCallback;
+	folderOutStream->TestMode = (testModeSpec != 0);
+	folderOutStream->CheckCrc = (_crcSize != 0);
+	//可能是解压
+	for (UInt32 i = 0;; lps->OutSize += curUnpacked, lps->InSize += curPacked)
+	{
+		RINOK(lps->SetCur());
 
-    i += numSolidFiles;
+		if (i >= numItems)
+			break;
+		//可能是解压包的大小
+		curUnpacked = 0;
+		//可能是当前包的大小
+		curPacked = 0;
+		//文件序号
+		UInt32 fileIndex = allFilesMode ? i : indices[i];
 
-    RINOK(result);
+		//文件对应的folder序号
+		CNum folderIndex = _db.FileIndexToFolderIndexMap[fileIndex];
 
-    // to test solid block with zero unpacked size we disable that code
-    if (folderOutStream->WasWritingFinished())
-      continue;
+		//在同一个folder中的文件数量
+		UInt32 numSolidFiles = 1;
 
-    #ifndef _NO_CRYPTO
-    CMyComPtr<ICryptoGetTextPassword> getTextPassword;
-    if (extractCallback)
-      extractCallback.QueryInterface(IID_ICryptoGetTextPassword, &getTextPassword);
-    #endif
+		if (folderIndex != kNumNoIndex)
+		{
+			curPacked = _db.GetFolderFullPackSize(folderIndex);
+			//下一个文件序号
+			UInt32 nextFile = fileIndex + 1;
+			fileIndex = _db.FolderStartFileIndex[folderIndex];		//获取folder开始的文件序号
+			//用于找出下一个非当前folder的文件
+			UInt32 k;
+			for (k = i + 1; k < numItems; k++)
+			{
+				//k所对应的文件序号
+				UInt32 fileIndex2 = allFilesMode ? k : indices[k];
+				//fileIndex2对应的folder和当前folder号比较，确定是否为同一个folder，若不是则跳出循环
+				//或，fileIndex2小于nextFile，即可能顺序出错，跳出循环
+				if (_db.FileIndexToFolderIndexMap[fileIndex2] != folderIndex
+					|| fileIndex2 < nextFile)
+					break;
+				//这里是当前folder对应的最后一个需要解压的文件序号+1，即界限
+				nextFile = fileIndex2 + 1;
+			}
 
-    try
-    {
-      #ifndef _NO_CRYPTO
-        bool isEncrypted = false;
-        bool passwordIsDefined = false;
-        UString password;
-      #endif
+			numSolidFiles = k - i;
+			//这里把从fileIndex到nextFile的文件大小累加
+			for (k = fileIndex; k < nextFile; k++)
+				curUnpacked += _db.Files[k].Size;
+		}
 
-		//解压
-      HRESULT result = decoder.Decode(
-          EXTERNAL_CODECS_VARS
-          _inStream,
-          _db.ArcInfo.DataStartPosition,
-          _db, folderIndex,
-          &curUnpacked,
+		HRESULT result = folderOutStream->Init(fileIndex,
+			allFilesMode ? NULL : indices + i,
+			numSolidFiles);
 
-          outStream,
-          progress,
-          NULL // *inStreamMainRes
-          
-          _7Z_DECODER_CRYPRO_VARS
-          #if !defined(_7ZIP_ST) && !defined(_SFX)
-            , true, _numThreads
-          #endif
-          );
+		i += numSolidFiles;
 
-      if (result == S_FALSE || result == E_NOTIMPL)
-      {
-        bool wasFinished = folderOutStream->WasWritingFinished();
-      
-        int resOp = (result == S_FALSE ?
-            NExtract::NOperationResult::kDataError :
-            NExtract::NOperationResult::kUnsupportedMethod);
+		RINOK(result);
 
-        RINOK(folderOutStream->FlushCorrupted(resOp));
+		// to test solid block with zero unpacked size we disable that code
+		if (folderOutStream->WasWritingFinished())
+			continue;
 
-        if (wasFinished)
-        {
-          // we don't show error, if it's after required files
-          if (/* !folderOutStream->ExtraWriteWasCut && */ callbackMessage)
-          {
-            RINOK(callbackMessage->ReportExtractResult(NEventIndexType::kBlockIndex, folderIndex, resOp));
-          }
-        }
-        continue;
-      }
-      
-      if (result != S_OK)
-        return result;
+#ifndef _NO_CRYPTO
+		CMyComPtr<ICryptoGetTextPassword> getTextPassword;
+		if (extractCallback)
+			extractCallback.QueryInterface(IID_ICryptoGetTextPassword, &getTextPassword);
+#endif
 
-      RINOK(folderOutStream->FlushCorrupted(NExtract::NOperationResult::kDataError));
-      continue;
-    }
-    catch(...)
-    {
-      RINOK(folderOutStream->FlushCorrupted(NExtract::NOperationResult::kDataError));
-      // continue;
-      return E_FAIL;
-    }
-  }
+		try
+		{
+#ifndef _NO_CRYPTO
+			bool isEncrypted = false;
+			bool passwordIsDefined = false;
+			UString password;
+#endif
 
-  return S_OK;
+			//解压
+			HRESULT result = decoder.Decode(
+				EXTERNAL_CODECS_VARS
+				_inStream,
+				_db.ArcInfo.DataStartPosition,
+				_db, folderIndex,
+				&curUnpacked,
 
-  COM_TRY_END
+				outStream,
+				progress,
+				NULL // *inStreamMainRes
+
+				_7Z_DECODER_CRYPRO_VARS
+#if !defined(_7ZIP_ST) && !defined(_SFX)
+				, true, _numThreads
+#endif
+				);
+
+			if (result == S_FALSE || result == E_NOTIMPL)
+			{
+				bool wasFinished = folderOutStream->WasWritingFinished();
+
+				int resOp = (result == S_FALSE ?
+					NExtract::NOperationResult::kDataError :
+					NExtract::NOperationResult::kUnsupportedMethod);
+
+				RINOK(folderOutStream->FlushCorrupted(resOp));
+
+				if (wasFinished)
+				{
+					// we don't show error, if it's after required files
+					if (/* !folderOutStream->ExtraWriteWasCut && */ callbackMessage)
+					{
+						RINOK(callbackMessage->ReportExtractResult(NEventIndexType::kBlockIndex, folderIndex, resOp));
+					}
+				}
+				continue;
+			}
+
+			if (result != S_OK)
+				return result;
+
+			RINOK(folderOutStream->FlushCorrupted(NExtract::NOperationResult::kDataError));
+			continue;
+		}
+		catch (...)
+		{
+			RINOK(folderOutStream->FlushCorrupted(NExtract::NOperationResult::kDataError));
+			// continue;
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+
+	COM_TRY_END
 }
 
 }}

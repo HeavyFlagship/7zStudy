@@ -40,7 +40,7 @@ static HRESULT DecompressArchive(
 
 	FString outDir = options.OutputDir;
 	UString replaceName = arc.DefaultName;
-
+	//处理分为多个文档的文档名
 	if (arcLink.Arcs.Size() > 1)
 	{
 		// Most "pe" archives have same name of archive subfile "[0]" or ".rsrc_1".
@@ -82,7 +82,7 @@ static HRESULT DecompressArchive(
 
 		CReadArcItem item;
 		
-		//可能是解压过程
+		//
 		for (UInt32 i = 0; i < numItems; i++)
 		{
 			if (elimIsPossible || !allFilesAreAllowed)
@@ -195,7 +195,7 @@ static HRESULT DecompressArchive(
 
 #endif
 
-
+	//在这里解压
 	HRESULT result;
 	Int32 testMode = (options.TestMode && !calcCrc) ? 1 : 0;
 	if (options.StdInMode)

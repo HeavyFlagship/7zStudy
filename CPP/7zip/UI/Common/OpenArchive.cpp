@@ -2882,6 +2882,7 @@ HRESULT CArc::OpenStream(const COpenOptions &op)
     RINOK(Archive_GetArcBoolProp(Archive, kpidReadOnly, IsReadOnly));
 
     const UString fileName = ExtractFileNameFromPath(Path);
+	//获取扩展名
     UString extension;
     {
       int dotPos = fileName.ReverseFind_Dot();
@@ -3080,7 +3081,7 @@ HRESULT CArchiveLink::Open(COpenOptions &op)
   for (;;)
   {
     resSpec = S_OK;
-
+	//设置打开格式
     op.openType = COpenType();
     if (op.types->Size() >= 1)
     {

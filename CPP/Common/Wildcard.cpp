@@ -129,7 +129,7 @@ UString ExtractDirPrefixFromPath(const UString &path)
       break;
   return path.Left((unsigned)(p - start));
 }
-
+//从路径名后取解压文件名
 UString ExtractFileNameFromPath(const UString &path)
 {
   const wchar_t *start = path;

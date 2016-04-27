@@ -991,20 +991,20 @@ HRESULT CMixerMT::Code(
     ICompressProgressInfo *progress)
 {
   Init(inStreams, outStreams);
-
+  //创建线程
   unsigned i;
   for (i = 0; i < _coders.Size(); i++)
     if (i != MainCoderIndex)
     {
       RINOK(_coders[i].Create());
     }
-
+  //开始线程
   for (i = 0; i < _coders.Size(); i++)
     if (i != MainCoderIndex)
       _coders[i].Start();
-
+  //主coder
   _coders[MainCoderIndex].Code(progress);
-
+  //等待执行完成
   for (i = 0; i < _coders.Size(); i++)
     if (i != MainCoderIndex)
       _coders[i].WaitExecuteFinish();
