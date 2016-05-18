@@ -596,12 +596,12 @@ HRESULT CArchiveExtractCallback::MyCopyFile(ISequentialOutStream *outStream)
 #endif
 */
 
-//获取outStream
+//获取合适的outStream
 STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStream **outStream, Int32 askExtractMode)
 {
 	COM_TRY_BEGIN
 
-		*outStream = NULL;
+	*outStream = NULL;
 
 #ifndef _SFX
 	if (_hashStream)
@@ -627,7 +627,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStre
 // _CopyFile_Path.Empty();
 	linkPath.Empty();
 #endif
-
+	//当前要解压的文档,从中提取各种信息
 	IInArchive *archive = _arc->Archive;
 
 #ifndef _SFX
@@ -840,7 +840,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStre
 		}
 
 		unsigned numRemovePathParts = 0;
-
+		//路径判断
 		switch (_pathMode)
 		{
 		case NExtract::NPathMode::kFullPaths:
@@ -919,7 +919,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStre
 	}
 
 #ifndef _SFX
-
+	//解压到流的情形
 	if (ExtractToStreamCallback)
 	{
 		if (!GetProp)
@@ -944,7 +944,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStre
 	}
 
 #endif
-
+	//输出流确定
 	CMyComPtr<ISequentialOutStream> outStreamLoc;
 
 	if (askExtractMode == NArchive::NExtract::NAskMode::kExtract && !_testMode)
@@ -975,7 +975,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStre
 
 			bool isAnti = false;
 			RINOK(_arc->IsItemAnti(index, isAnti));
-
+			//AltStream相关
 #ifdef SUPPORT_ALT_STREAMS
 			if (!_item.IsAltStream
 				|| !pathParts.IsEmpty()
@@ -1010,7 +1010,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStre
 #endif
 
 			UString processedPath = MakePathFromParts(pathParts);
-
+			//猜测isAnti是当前路径需要删除的意思
 			if (!isAnti)
 			{
 				if (!_item.IsDir)

@@ -276,7 +276,7 @@ HRESULT Extract(
 	CBoolArr skipArcs(numArcs);
 	for (i = 0; i < numArcs; i++)
 		skipArcs[i] = false;
-	//文档解压回调函数，可能用于给Decompress函数传递文档信息
+	//文档解压回调函数，由Decompress函数传回文档处理的信息
 	CArchiveExtractCallback *ecs = new CArchiveExtractCallback;
 	CMyComPtr<IArchiveExtractCallback> ec(ecs);
 	bool multi = (numArcs > 1);
@@ -293,7 +293,7 @@ HRESULT Extract(
 	UInt64 totalPackProcessed = 0;
 	bool thereAreNotOpenArcs = false;
 
-	//循环，多文档解压
+	//循环，解压多文档个
 	for (i = 0; i < numArcs; i++)
 	{
 		if (skipArcs[i])
@@ -320,6 +320,7 @@ HRESULT Extract(
 		#endif
 		*/
 
+		//将要解压的文档路径传入extracrCallback
 		RINOK(extractCallback->BeforeOpen(arcPath, options.TestMode));
 		CArchiveLink arcLink;
 
@@ -361,7 +362,7 @@ HRESULT Extract(
 		op.excludedFormats = &excludedFormats;
 		op.stdInMode = options.StdInMode;
 		op.stream = NULL;
-		op.filePath = arcPath;
+		op.filePath = arcPath;		//传入文档路径
 
 		HRESULT result = arcLink.Open3(op, openCallback);
 

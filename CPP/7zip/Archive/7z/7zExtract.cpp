@@ -42,7 +42,7 @@ private:
 public:
 	MY_UNKNOWN_IMP1(ISequentialOutStream)
 
-		const CDbEx *_db;
+	const CDbEx *_db;
 	CMyComPtr<IArchiveExtractCallback> ExtractCallback;
 
 	bool ExtraWriteWasCut;
@@ -72,7 +72,7 @@ HRESULT CFolderOutStream::Init(unsigned startIndex, const UInt32 *indexes, unsig
 
 	return ProcessEmptyFiles();
 }
-
+//打开文件，并设置真正输出流
 HRESULT CFolderOutStream::OpenFile(bool isCorrupted)
 {
 	const CFileItem &fi = _db->Files[_fileIndex];
