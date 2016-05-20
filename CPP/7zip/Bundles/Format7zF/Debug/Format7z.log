@@ -1,0 +1,148 @@
+﻿生成启动时间为 2016/5/20 11:47:37。
+     1>项目“D:\GitHub\7zStudy\CPP\7zip\Bundles\Format7zF\Format7z.vcxproj”在节点 2 上(Rebuild 个目标)。
+     1>CustomBuild:
+         Performing Custom Build Tools
+          Assembling: D:\GitHub\7zStudy\Asm\x86\7zCrcOpt.asm
+         Microsoft (R) Macro Assembler Version 14.00.23026.0
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         Performing Custom Build Tools
+         Microsoft (R) Macro Assembler Version 14.00.23026.0
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+          Assembling: D:\GitHub\7zStudy\Asm\x86\AesOpt.asm
+       ClCompile:
+         D:\Programme\VisualStudio\VC\bin\CL.exe /c /I..\..\..\..\SDK /ZI /nologo /W4 /WX /Od /Oy- /D _DEBUG /D WIN32 /D _WINDOWS /D _USRDLL /D MY7Z_EXPORTS /D NO_REGISTRY /D EXTERNAL_CODECS /D _7ZIP_LARGE_PAGES /D _7ZIP_ST_9 /D _VC80_UPGRADE=0x0600 /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yc"StdAfx.h" /Fp".\Debug\Format7z.pch" /Fo".\Debug\\" /Fd".\Debug\vc140.pdb" /Gr /TP /analyze- /errorReport:prompt StdAfx.cpp
+         StdAfx.cpp
+         D:\Programme\VisualStudio\VC\bin\CL.exe /c /I..\..\..\..\SDK /ZI /nologo /W4 /WX /Od /Oy- /D _DEBUG /D WIN32 /D _WINDOWS /D _USRDLL /D MY7Z_EXPORTS /D NO_REGISTRY /D EXTERNAL_CODECS /D _7ZIP_LARGE_PAGES /D _7ZIP_ST_9 /D _VC80_UPGRADE=0x0600 /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo".\Debug\\" /Fd".\Debug\vc140.pdb" /Gr /TC /analyze- /errorReport:prompt ..\..\..\..\C\7zBuf2.c ..\..\..\..\C\7zCrc.c ..\..\..\..\C\7zStream.c ..\..\..\..\C\Aes.c ..\..\..\..\C\Alloc.c ..\..\..\..\C\Bcj2.c ..\..\..\..\C\Bcj2Enc.c ..\..\..\..\C\Blake2s.c ..\..\..\..\C\Bra.c ..\..\..\..\C\Bra86.c ..\..\..\..\C\BraIA64.c ..\..\..\..\C\BwtSort.c ..\..\..\..\C\CpuArch.c ..\..\..\..\C\Delta.c ..\..\..\..\C\HuffEnc.c ..\..\..\..\C\LzFind.c ..\..\..\..\C\LzFindMt.c ..\..\..\..\C\Lzma2Dec.c ..\..\..\..\C\Lzma2Enc.c ..\..\..\..\C\LzmaDec.c ..\..\..\..\C\LzmaEnc.c ..\..\..\..\C\MtCoder.c ..\..\..\..\C\Ppmd7.c ..\..\..\..\C\Ppmd7Dec.c ..\..\..\..\C\Ppmd7Enc.c ..\..\..\..\C\Ppmd8.c ..\..\..\..\C\Ppmd8Dec.c ..\..\..\..\C\Ppmd8Enc.c ..\..\..\..\C\Sha1.c ..\..\..\..\C\Sha256.c ..\..\..\..\C\Sort.c ..\..\..\..\C\Threads.c ..\..\..\..\C\Xz.c ..\..\..\..\C\XzCrc64.c ..\..\..\..\C\XzCrc64Opt.c ..\..\..\..\C\XzDec.c ..\..\..\..\C\XzEnc.c ..\..\..\..\C\XzIn.c
+         XzIn.c
+         XzEnc.c
+         XzDec.c
+         XzCrc64Opt.c
+         XzCrc64.c
+         Xz.c
+         Threads.c
+         Sort.c
+         Sha256.c
+         Sha1.c
+         Ppmd8Enc.c
+     1>d:\github\7zstudy\c\ppmd8enc.c(87): error C2220: 警告被视为错误 - 没有生成“object”文件
+     1>d:\github\7zstudy\c\ppmd8enc.c(87): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\ppmd8enc.c(87): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\ppmd8enc.c(63): note: 参见“i”的声明
+         Ppmd8Dec.c
+     1>d:\github\7zstudy\c\ppmd8dec.c(83): error C2220: 警告被视为错误 - 没有生成“object”文件
+     1>d:\github\7zstudy\c\ppmd8dec.c(83): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\ppmd8dec.c(83): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\ppmd8dec.c(54): note: 参见“i”的声明
+         Ppmd8.c
+     1>d:\github\7zstudy\c\ppmd8.c(775): error C2220: 警告被视为错误 - 没有生成“object”文件
+     1>d:\github\7zstudy\c\ppmd8.c(775): warning C4457: “s1”的声明隐藏了函数参数
+         d:\github\7zstudy\c\ppmd8.c(775): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\ppmd8.c(697): note: 参见“s1”的声明
+     1>d:\github\7zstudy\c\ppmd8.c(918): warning C4456: “s”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\ppmd8.c(918): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\ppmd8.c(802): note: 参见“s”的声明
+     1>d:\github\7zstudy\c\ppmd8.c(927): warning C4456: “s”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\ppmd8.c(927): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\ppmd8.c(802): note: 参见“s”的声明
+     1>d:\github\7zstudy\c\ppmd8.c(954): warning C4456: “s”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\ppmd8.c(954): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\ppmd8.c(802): note: 参见“s”的声明
+         Ppmd7Enc.c
+     1>d:\github\7zstudy\c\ppmd7enc.c(111): error C2220: 警告被视为错误 - 没有生成“object”文件
+     1>d:\github\7zstudy\c\ppmd7enc.c(111): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\ppmd7enc.c(111): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\ppmd7enc.c(86): note: 参见“i”的声明
+         Ppmd7Dec.c
+     1>d:\github\7zstudy\c\ppmd7dec.c(117): error C2220: 警告被视为错误 - 没有生成“object”文件
+     1>d:\github\7zstudy\c\ppmd7dec.c(117): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\ppmd7dec.c(117): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\ppmd7dec.c(87): note: 参见“i”的声明
+         Ppmd7.c
+         MtCoder.c
+         LzmaEnc.c
+     1>d:\github\7zstudy\c\lzmaenc.c(1147): error C2220: 警告被视为错误 - 没有生成“object”文件
+     1>d:\github\7zstudy\c\lzmaenc.c(1147): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1147): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(986): note: 参见“i”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1181): warning C4456: “numPairs”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1181): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(986): note: 参见“numPairs”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1181): warning C4456: “posState”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1181): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(986): note: 参见“posState”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1182): warning C4456: “matchPrice”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1182): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(987): note: 参见“matchPrice”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1182): warning C4456: “repMatchPrice”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1182): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(987): note: 参见“repMatchPrice”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1184): warning C4456: “curByte”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1184): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(991): note: 参见“curByte”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1184): warning C4456: “matchByte”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1184): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(991): note: 参见“matchByte”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1185): warning C4456: “data”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1185): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(990): note: 参见“data”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1248): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1248): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(986): note: 参见“i”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1257): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1257): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(986): note: 参见“i”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1454): warning C4456: “normalMatchPrice”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1454): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(987): note: 参见“normalMatchPrice”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1464): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1464): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(986): note: 参见“i”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1512): warning C4456: “curAndLenPrice”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1512): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(1467): note: 参见“curAndLenPrice”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1513): warning C4456: “opt”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1513): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(1469): note: 参见“opt”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1535): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1535): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(986): note: 参见“i”的声明
+     1>d:\github\7zstudy\c\lzmaenc.c(1721): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\lzmaenc.c(1721): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\lzmaenc.c(1700): note: 参见“i”的声明
+         LzmaDec.c
+         Lzma2Enc.c
+         正在生成代码...
+         正在编译...
+         Lzma2Dec.c
+         LzFindMt.c
+         LzFind.c
+         HuffEnc.c
+     1>d:\github\7zstudy\c\huffenc.c(124): error C2220: 警告被视为错误 - 没有生成“object”文件
+     1>d:\github\7zstudy\c\huffenc.c(124): warning C4456: “num”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\huffenc.c(124): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\huffenc.c(19): note: 参见“num”的声明
+     1>d:\github\7zstudy\c\huffenc.c(141): warning C4456: “i”的声明隐藏了上一个本地声明
+         d:\github\7zstudy\c\huffenc.c(141): note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+         d:\github\7zstudy\c\huffenc.c(85): note: 参见“i”的声明
+         Delta.c
+         CpuArch.c
+         BwtSort.c
+         BraIA64.c
+         Bra86.c
+         Bra.c
+         Blake2s.c
+         Bcj2Enc.c
+         Bcj2.c
+         Alloc.c
+         Aes.c
+         7zStream.c
+         7zCrc.c
+         7zBuf2.c
+         正在生成代码...
+     1>已完成生成项目“D:\GitHub\7zStudy\CPP\7zip\Bundles\Format7zF\Format7z.vcxproj”(Rebuild 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:07.09
